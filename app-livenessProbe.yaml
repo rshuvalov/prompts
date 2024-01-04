@@ -1,0 +1,16 @@
+# kubectl ai "create pod app add liveness prob port 3000 in namespace demo container name app image gcr.io/symmetric-ray-404110/demo:v2.0.0"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+  namespace: demo
+spec:
+  containers:
+  - name: app
+    image: gcr.io/symmetric-ray-404110/demo:v2.0.0
+    ports:
+    - containerPort: 3000
+    livenessProbe:
+      httpGet:
+        path: /
+        port: 3000

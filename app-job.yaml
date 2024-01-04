@@ -1,0 +1,20 @@
+# kubectl ai "create rsync job add persistent volume on gcePersistentDisk pdName=glow-data-disk-200 fsTyp=ext4 run container from image google/cloud-sdk:275.0.0-alpine command '/bin/sh -c gsutil -m rsync -dr gs://glow-sportradar/ /data'"
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rsync-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: rsync-container
+        image: google/cloud-sdk:275.0.0-alpine
+        command: ["/bin/sh", "-c", "gsutil -m rsync -dr gs://glow-sportradar/ /data"]
+        volumeMounts:
+        - name: data-volume
+          mountPath: /data
+      volumes:
+      - name: data-volume
+        gcePersistentDisk:
+          pdName: glow-data-disk-200
+          fsType: ext4

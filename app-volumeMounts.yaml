@@ -1,0 +1,31 @@
+# kubectl ai "create pod app add liveness and rediness prob port 3000 in namespace demo container name app image gcr.io/symmetric-ray-404110/demo:v2.0.0 add host volume name=data path=var/lib/app and mount ccontainer on volume path=/data"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app
+  namespace: demo
+spec:
+  containers:
+    - name: app
+      image: gcr.io/symmetric-ray-404110/demo:v2.0.0
+      ports:
+        - containerPort: 3000
+      livenessProbe:
+        httpGet:
+          path: /
+          port: 3000
+        initialDelaySeconds: 30
+        periodSeconds: 10
+      readinessProbe:
+        httpGet:
+          path: /
+          port: 3000
+        initialDelaySeconds: 10
+        periodSeconds: 5
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      hostPath:
+        path: /var/lib/app

@@ -1,0 +1,27 @@
+# kubectl ai "create multi container app with nginx and debian, add shared volume and attach it to containers. Debian command '/bin/sh -c' in args add loop in the loop date var writes to index.html file and sleep 1 sec"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multi-container-app
+spec:
+  volumes:
+    - name: shared-volume
+      emptyDir: {}
+  containers:
+    - name: nginx-container
+      image: nginx
+      volumeMounts:
+        - name: shared-volume
+          mountPath: /var/www/html
+    - name: debian-container
+      image: debian
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          while true; do
+            echo "$(date)" >> /var/www/html/index.html
+            sleep 1
+          done
+      volumeMounts:
+        - name: shared-volume
+          mountPath: /var/www/html
